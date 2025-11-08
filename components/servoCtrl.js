@@ -35,7 +35,7 @@ export default function ServoControls({ data, onCommand }) {
       {/* Servo Controls */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* Solar Inlet Flap */}
-        <div className="bg-gradient-to-r from-orange-100 to-yellow-100 p-6 rounded-xl">
+        <div className="bg-linear-to-r from-orange-100 to-yellow-100 p-6 rounded-xl">
           <div className="flex items-center gap-3 mb-4">
             <Gauge className="text-orange-600" size={28} />
             <h3 className="text-xl font-bold text-gray-800">Solar Inlet Flap</h3>
@@ -61,7 +61,7 @@ export default function ServoControls({ data, onCommand }) {
         </div>
         
         {/* Top Vent */}
-        <div className="bg-gradient-to-r from-blue-100 to-cyan-100 p-6 rounded-xl">
+        <div className="bg-linear-to-r from-blue-100 to-cyan-100 p-6 rounded-xl">
           <div className="flex items-center gap-3 mb-4">
             <Gauge className="text-blue-600" size={28} />
             <h3 className="text-xl font-bold text-gray-800">Top Vent</h3>
@@ -91,7 +91,7 @@ export default function ServoControls({ data, onCommand }) {
       <div className="flex justify-center mb-8">
         <button
           onClick={handleTurnEggs}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-12 py-6 rounded-2xl font-bold text-xl flex items-center gap-4 hover:scale-105 transition-transform shadow-xl hover:shadow-2xl"
+          className="bg-linear-to-r from-purple-500 to-pink-500 text-white px-12 py-6 rounded-2xl font-bold text-xl flex items-center gap-4 hover:scale-105 transition-transform shadow-xl hover:shadow-2xl"
         >
           <RotateCw size={32} />
           Turn Eggs Manually
@@ -99,7 +99,7 @@ export default function ServoControls({ data, onCommand }) {
       </div>
       
       {/* Interval Control */}
-      <div className="bg-gradient-to-r from-gray-100 to-gray-200 p-6 rounded-xl">
+      <div className="bg-linear-to-r from-gray-100 to-gray-200 p-6 rounded-xl">
         <h3 className="text-lg font-bold text-gray-800 mb-4">Sensor Update Interval</h3>
         <div className="flex items-center gap-4">
           <input

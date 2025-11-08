@@ -20,7 +20,7 @@ export default function ManualControls({ data, onCommand }) {
           onClick={() => handleToggle('heater')}
           className={`p-6 rounded-xl font-bold text-lg flex flex-col items-center gap-3 transition-all transform hover:scale-105 ${
             data?.heater 
-              ? 'bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-lg' 
+              ? 'bg-linear-to-br from-orange-500 to-red-500 text-white shadow-lg' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -36,7 +36,7 @@ export default function ManualControls({ data, onCommand }) {
           onClick={() => handleToggle('internal_fan')}
           className={`p-6 rounded-xl font-bold text-lg flex flex-col items-center gap-3 transition-all transform hover:scale-105 ${
             data?.internal_fan 
-              ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg' 
+              ? 'bg-linear-to-br from-blue-500 to-cyan-500 text-white shadow-lg' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -52,7 +52,7 @@ export default function ManualControls({ data, onCommand }) {
           onClick={() => handleToggle('solar_fans')}
           className={`p-6 rounded-xl font-bold text-lg flex flex-col items-center gap-3 transition-all transform hover:scale-105 ${
             data?.solar_fans 
-              ? 'bg-gradient-to-br from-yellow-500 to-orange-400 text-white shadow-lg' 
+              ? 'bg-linear-to-br from-yellow-500 to-orange-400 text-white shadow-lg' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -68,7 +68,7 @@ export default function ManualControls({ data, onCommand }) {
           onClick={() => handleToggle('solenoid')}
           className={`p-6 rounded-xl font-bold text-lg flex flex-col items-center gap-3 transition-all transform hover:scale-105 ${
             data?.solenoid 
-              ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg' 
+              ? 'bg-linear-to-br from-cyan-500 to-blue-600 text-white shadow-lg' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
