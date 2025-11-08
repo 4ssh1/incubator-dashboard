@@ -71,57 +71,40 @@ export default function Dashboard() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h1 className="text-5xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">
-                ESP32 Egg Incubator
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Real-time monitoring and control system with Firebase logging
-              </p>
-            </div>
-            <div className="flex gap-4 items-center">
-              <button
-                onClick={handleManualSave}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
-              >
-                Save Now
-              </button>
-              <div className={`px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 ${
-                status === 'online'
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white animate-pulse'
-                  : 'bg-gradient-to-r from-red-500 to-rose-500 text-white'
-              }`}>
-                {status === 'online' ? 'ONLINE' : 'OFFLINE'}
-              </div>
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Header */}
+      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Incubator Monitor</h1>
+            <p className="text-slate-400 text-sm mt-1">Real-time monitoring & control</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleManualSave}
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+            >
+              Save Data
+            </button>
+            <div className={`px-4 py-2.5 rounded-lg font-semibold flex items-center gap-2 ${
+              status === 'online'
+                ? 'bg-emerald-500/20 text-emerald-300'
+                : 'bg-red-500/20 text-red-300'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
+              {status === 'online' ? 'Online' : 'Offline'}
             </div>
           </div>
         </div>
+      </header>
 
+      <main className="max-w-7xl mx-auto px-6 py-12">
         <SensorDisplay data={sensorData} status={status} />
-
         <ManualControls data={sensorData} onCommand={handleCommand} />
-
         <ServoControls data={sensorData} onCommand={handleCommand} />
-
         <TemperatureChart currentData={sensorData} />
-
         <DataTable />
-
-        {/* Footer */}
-        <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl shadow-md p-8 border border-gray-200">
-          <p className="text-gray-700 text-center mb-2 text-lg">
-            <span className="font-semibold">Tip:</span> Data is automatically saved to Firebase every 30 seconds. Use the "Save Now" button to save immediately.
-          </p>
-          <p className="text-sm text-gray-500 text-center">
-            ESP32 Incubator Control System v1.0 | Next.js 15 + Firebase + MQTT
-          </p>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

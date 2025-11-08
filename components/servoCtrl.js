@@ -7,16 +7,16 @@ export default function ServoControls({ data, onCommand }) {
   const [solarInlet, setSolarInlet] = useState(0);
   const [topVent, setTopVent] = useState(0);
   const [interval, setInterval] = useState(5000);
-  
+
   const handleServoChange = (servo, value) => {
     const command = { [servo]: parseInt(value) };
     onCommand(command);
   };
-  
+
   const handleTurnEggs = () => {
     onCommand({ turn_eggs: true });
   };
-  
+
   const handleIntervalUpdate = () => {
     const newInterval = parseInt(interval);
     if (newInterval >= 1000 && newInterval <= 60000) {
@@ -25,22 +25,18 @@ export default function ServoControls({ data, onCommand }) {
       alert('Interval must be between 1000 and 60000 milliseconds');
     }
   };
-  
+
   return (
-    <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100">
-      <h2 className="text-3xl font-bold text-slate-800 mb-8 pb-4 border-b-2 border-slate-200">
-        Servo & Stepper Controls
-      </h2>
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-6 text-slate-100">Servo & Motion</h2>
 
       {/* Servo Controls */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* Solar Inlet Flap */}
-        <div className="bg-gradient-to-br from-orange-50 to-yellow-50 p-8 rounded-2xl shadow-md border border-orange-100">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-white p-3 rounded-xl shadow-sm">
-              <Gauge className="text-orange-600" size={28} />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800">Solar Inlet Flap</h3>
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Gauge className="text-orange-400" size={24} />
+            <h3 className="font-semibold text-slate-100">Solar Inlet</h3>
           </div>
           <input
             type="range"
@@ -51,24 +47,22 @@ export default function ServoControls({ data, onCommand }) {
               setSolarInlet(e.target.value);
               handleServoChange('solar_inlet', e.target.value);
             }}
-            className="w-full h-4 bg-orange-200 rounded-lg appearance-none cursor-pointer accent-orange-600 shadow-inner"
+            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-400"
           />
-          <div className="flex justify-between items-center mt-6 bg-white px-4 py-3 rounded-xl shadow-sm">
-            <span className="text-sm font-medium text-gray-600">0°</span>
-            <span className="text-3xl font-extrabold text-orange-600">
+          <div className="flex justify-between items-center mt-4 text-sm">
+            <span className="text-slate-400">0°</span>
+            <span className="text-2xl font-bold text-orange-400">
               {data?.solar_inlet_angle || solarInlet}°
             </span>
-            <span className="text-sm font-medium text-gray-600">180°</span>
+            <span className="text-slate-400">180°</span>
           </div>
         </div>
 
         {/* Top Vent */}
-        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl shadow-md border border-blue-100">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-white p-3 rounded-xl shadow-sm">
-              <Gauge className="text-blue-600" size={28} />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800">Top Vent</h3>
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Gauge className="text-blue-400" size={24} />
+            <h3 className="font-semibold text-slate-100">Top Vent</h3>
           </div>
           <input
             type="range"
@@ -79,56 +73,55 @@ export default function ServoControls({ data, onCommand }) {
               setTopVent(e.target.value);
               handleServoChange('top_vent', e.target.value);
             }}
-            className="w-full h-4 bg-blue-200 rounded-lg appearance-none cursor-pointer accent-blue-600 shadow-inner"
+            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-400"
           />
-          <div className="flex justify-between items-center mt-6 bg-white px-4 py-3 rounded-xl shadow-sm">
-            <span className="text-sm font-medium text-gray-600">0°</span>
-            <span className="text-3xl font-extrabold text-blue-600">
+          <div className="flex justify-between items-center mt-4 text-sm">
+            <span className="text-slate-400">0°</span>
+            <span className="text-2xl font-bold text-blue-400">
               {data?.top_vent_angle || topVent}°
             </span>
-            <span className="text-sm font-medium text-gray-600">180°</span>
+            <span className="text-slate-400">180°</span>
           </div>
         </div>
       </div>
 
       {/* Stepper Motor Control */}
-      <div className="bg-gradient-to-br from-slate-50 to-gray-50 p-8 rounded-2xl shadow-md border border-slate-200">
-        <div className="flex flex-col md:flex-row gap-6 items-center">
-          <button
-            onClick={handleTurnEggs}
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-10 py-5 rounded-2xl font-bold text-lg flex items-center gap-4 hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
-          >
-            <RotateCw size={28} />
-            Turn Eggs Manually
-          </button>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        <button
+          onClick={handleTurnEggs}
+          className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold flex items-center justify-center gap-3 transition-colors mb-6"
+        >
+          <RotateCw size={24} />
+          Turn Eggs
+        </button>
 
-          {/* Interval Control */}
-          <div className="flex-1 w-full">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Sensor Update Interval</h3>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <input
-                type="number"
-                value={interval}
-                onChange={(e) => setInterval(e.target.value)}
-                className="px-6 py-4 border-2 border-gray-300 rounded-xl font-mono text-lg focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 shadow-sm"
-                placeholder="5000"
-                min="1000"
-                max="60000"
-              />
-              <span className="text-gray-600 font-semibold whitespace-nowrap">milliseconds</span>
-              <button
-                onClick={handleIntervalUpdate}
-                className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
-              >
-                Update
-              </button>
-            </div>
-            <p className="text-xs text-gray-500 mt-3">
-              Valid range: 1000 - 60000 ms (1 second to 1 minute)
-            </p>
+        {/* Interval Control */}
+        <div>
+          <label className="block text-sm font-semibold text-slate-300 mb-3">
+            Update Interval (ms)
+          </label>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="number"
+              value={interval}
+              onChange={(e) => setInterval(e.target.value)}
+              className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 font-mono text-sm focus:border-blue-500 focus:outline-none"
+              placeholder="5000"
+              min="1000"
+              max="60000"
+            />
+            <button
+              onClick={handleIntervalUpdate}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+            >
+              Update
+            </button>
           </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Range: 1000-60000 ms (1 sec - 1 min)
+          </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

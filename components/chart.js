@@ -24,67 +24,64 @@ export default function TemperatureChart({ currentData }) {
   }, [currentData]);
   
   return (
-    <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100">
-      <h2 className="text-3xl font-bold text-slate-800 mb-8 pb-4 border-b-2 border-slate-200">
-        Temperature & Humidity History
-      </h2>
-      
-      {history.length > 0 ? (
-        <div className="bg-gradient-to-br from-slate-50 to-gray-50 p-6 rounded-2xl">
-            <ResponsiveContainer width="100%" height={400}>
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold mb-6 text-slate-100">History</h2>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        {history.length > 0 ? (
+          <>
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={history}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                 <XAxis
                   dataKey="time"
-                  stroke="#666"
+                  stroke="#94a3b8"
                   style={{ fontSize: '12px' }}
                 />
                 <YAxis
-                  stroke="#666"
+                  stroke="#94a3b8"
                   style={{ fontSize: '12px' }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '2px solid #ddd',
-                    borderRadius: '8px'
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #475569',
+                    borderRadius: '8px',
+                    color: '#e2e8f0'
                   }}
                 />
                 <Legend
-                  wrapperStyle={{ paddingTop: '20px' }}
+                  wrapperStyle={{ paddingTop: '20px', color: '#cbd5e1' }}
                   iconType="line"
                 />
                 <Line
                   type="monotone"
                   dataKey="temperature"
-                  stroke="#ef4444"
-                  strokeWidth={3}
+                  stroke="#fb923c"
+                  strokeWidth={2}
                   name="Temperature (°C)"
-                  dot={{ fill: '#ef4444', r: 4 }}
-                  activeDot={{ r: 6 }}
+                  dot={false}
                 />
                 <Line
                   type="monotone"
                   dataKey="humidity"
                   stroke="#3b82f6"
-                  strokeWidth={3}
+                  strokeWidth={2}
                   name="Humidity (%)"
-                  dot={{ fill: '#3b82f6', r: 4 }}
-                  activeDot={{ r: 6 }}
+                  dot={false}
                 />
               </LineChart>
             </ResponsiveContainer>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-64 bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-300 border-t-slate-600 mb-4"></div>
-          <p className="text-lg text-gray-500 font-medium">Waiting for sensor data...</p>
-        </div>
-      )}
-
-      <div className="mt-6 text-sm text-gray-600 text-center bg-slate-50 px-4 py-2 rounded-lg">
-        Displaying last {history.length} readings
+            <p className="text-xs text-slate-400 text-center mt-4">
+              Last {history.length} readings
+            </p>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-slate-600 border-t-blue-500 mb-4"></div>
+            <p className="text-slate-400">Waiting for data...</p>
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
