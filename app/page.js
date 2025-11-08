@@ -71,62 +71,53 @@ export default function Dashboard() {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50 w-full flex flex-col items-center py-10 px-5 ">
-      <div className="w-[95%]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="bg-white h-52">
-          <div className="flex flex-col justify-between items-center gap-5">
-            <div className='px-5 '>
-              <h1 className="text-4xl font-bold text-gray-800 leading-20">
-                 ESP32 Egg Incubator Dashboard
+        <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h1 className="text-5xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">
+                ESP32 Egg Incubator
               </h1>
-              <p className="text-gray-600 mt-5">
+              <p className="text-gray-600 text-lg">
                 Real-time monitoring and control system with Firebase logging
               </p>
             </div>
-            <div className="flex gap-4 w-[20rem] justify-between">
+            <div className="flex gap-4 items-center">
               <button
                 onClick={handleManualSave}
-                className="bg-blue-500 text-white inline-block rounded-lg w-30 font-bold hover:bg-blue-600 transition-colors shadow-md"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
               >
-                💾 Save Now
+                Save Now
               </button>
-              <div className={`px-6 inline-block py-3 rounded-full w-30 font-bold text-lg shadow-lg ${
-                status === 'online' 
-                  ? 'bg-green-500 text-white animate-pulse' 
-                  : 'bg-red-500 text-white'
+              <div className={`px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 ${
+                status === 'online'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white animate-pulse'
+                  : 'bg-gradient-to-r from-red-500 to-rose-500 text-white'
               }`}>
-                {status === 'online' ? '🟢 ONLINE' : '🔴 OFFLINE'}
+                {status === 'online' ? 'ONLINE' : 'OFFLINE'}
               </div>
             </div>
           </div>
         </div>
-          <SensorDisplay data={sensorData} status={status} />
 
-          {/* Manual Controls */}
-            <div className='mt-5'>
-              <ManualControls data={sensorData} onCommand={handleCommand} />
-            </div>
-        <div className='flex w-full'>          
-          {/* Servo & Stepper Controls */}
-            <ServoControls data={sensorData} onCommand={handleCommand} /> 
-        </div>
+        <SensorDisplay data={sensorData} status={status} />
 
-        <div className='flex w-full'>
-            {/* Temperature Chart */}
-              <TemperatureChart currentData={sensorData} />
-        </div>
-          
-          {/* Data Table */}
-            <DataTable />
-         
+        <ManualControls data={sensorData} onCommand={handleCommand} />
+
+        <ServoControls data={sensorData} onCommand={handleCommand} />
+
+        <TemperatureChart currentData={sensorData} />
+
+        <DataTable />
+
         {/* Footer */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mt-8 text-center">
-          <p className="text-gray-600">
-            💡 <strong>Tip:</strong> Data is automatically saved to Firebase every 30 seconds. 
-            Use the "Save Now" button to save immediately.
+        <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl shadow-md p-8 border border-gray-200">
+          <p className="text-gray-700 text-center mb-2 text-lg">
+            <span className="font-semibold">Tip:</span> Data is automatically saved to Firebase every 30 seconds. Use the "Save Now" button to save immediately.
           </p>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-sm text-gray-500 text-center">
             ESP32 Incubator Control System v1.0 | Next.js 15 + Firebase + MQTT
           </p>
         </div>

@@ -24,14 +24,14 @@ export default function TemperatureChart({ currentData }) {
   }, [currentData]);
   
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 m-8 h-[50vh]">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-4 border-green-500 pb-3 leading-20 ">
+    <div className="bg-white rounded-3xl shadow-lg p-8 mb-8 border border-gray-100">
+      <h2 className="text-3xl font-bold text-slate-800 mb-8 pb-4 border-b-2 border-slate-200">
         Temperature & Humidity History
       </h2>
       
       {history.length > 0 ? (
-        <div>
-            <ResponsiveContainer width="100%" height={400} >
+        <div className="bg-gradient-to-br from-slate-50 to-gray-50 p-6 rounded-2xl">
+            <ResponsiveContainer width="100%" height={400}>
               <LineChart data={history}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                 <XAxis
@@ -76,12 +76,13 @@ export default function TemperatureChart({ currentData }) {
             </ResponsiveContainer>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-64 text-gray-400">
-          <p className="text-lg">Waiting for sensor data...</p>
+        <div className="flex flex-col items-center justify-center h-64 bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-300 border-t-slate-600 mb-4"></div>
+          <p className="text-lg text-gray-500 font-medium">Waiting for sensor data...</p>
         </div>
       )}
-      
-      <div className="mt-4 text-sm text-gray-500 text-center">
+
+      <div className="mt-6 text-sm text-gray-600 text-center bg-slate-50 px-4 py-2 rounded-lg">
         Displaying last {history.length} readings
       </div>
     </div>
