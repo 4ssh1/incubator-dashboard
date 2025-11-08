@@ -71,66 +71,40 @@ export default function Dashboard() {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50 w-full flex flex-col items-center py-10 px-5 ">
-      <div className="w-[95%]">
-        {/* Header */}
-        <div className="bg-white h-52">
-          <div className="flex flex-col justify-between items-center gap-5">
-            <div className='px-5 '>
-              <h1 className="text-4xl font-bold text-gray-800 leading-20">
-                 ESP32 Egg Incubator Dashboard
-              </h1>
-              <p className="text-gray-600 mt-5">
-                Real-time monitoring and control system with Firebase logging
-              </p>
-            </div>
-            <div className="flex gap-4 w-[20rem] justify-between">
-              <button
-                onClick={handleManualSave}
-                className="bg-blue-500 text-white inline-block rounded-lg w-30 font-bold hover:bg-blue-600 transition-colors shadow-md"
-              >
-                💾 Save Now
-              </button>
-              <div className={`px-6 inline-block py-3 rounded-full w-30 font-bold text-lg shadow-lg ${
-                status === 'online' 
-                  ? 'bg-green-500 text-white animate-pulse' 
-                  : 'bg-red-500 text-white'
-              }`}>
-                {status === 'online' ? '🟢 ONLINE' : '🔴 OFFLINE'}
-              </div>
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Header */}
+      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Incubator Monitor</h1>
+            <p className="text-slate-400 text-sm mt-1">Real-time monitoring & control</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleManualSave}
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+            >
+              Save Data
+            </button>
+            <div className={`px-4 py-2.5 rounded-lg font-semibold flex items-center gap-2 ${
+              status === 'online'
+                ? 'bg-emerald-500/20 text-emerald-300'
+                : 'bg-red-500/20 text-red-300'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
+              {status === 'online' ? 'Online' : 'Offline'}
             </div>
           </div>
         </div>
-          <SensorDisplay data={sensorData} status={status} />
+      </header>
 
-          {/* Manual Controls */}
-            <div className='mt-5'>
-              <ManualControls data={sensorData} onCommand={handleCommand} />
-            </div>
-        <div className='flex w-full'>          
-          {/* Servo & Stepper Controls */}
-            <ServoControls data={sensorData} onCommand={handleCommand} /> 
-        </div>
-
-        <div className='flex w-full'>
-            {/* Temperature Chart */}
-              <TemperatureChart currentData={sensorData} />
-        </div>
-          
-          {/* Data Table */}
-            <DataTable />
-         
-        {/* Footer */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mt-8 text-center">
-          <p className="text-gray-600">
-            💡 <strong>Tip:</strong> Data is automatically saved to Firebase every 30 seconds. 
-            Use the "Save Now" button to save immediately.
-          </p>
-          <p className="text-xs text-gray-500 mt-2">
-            ESP32 Incubator Control System v1.0 | Next.js 15 + Firebase + MQTT
-          </p>
-        </div>
-      </div>
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <SensorDisplay data={sensorData} status={status} />
+        <ManualControls data={sensorData} onCommand={handleCommand} />
+        <ServoControls data={sensorData} onCommand={handleCommand} />
+        <TemperatureChart currentData={sensorData} />
+        <DataTable />
+      </main>
     </div>
   );
 }
