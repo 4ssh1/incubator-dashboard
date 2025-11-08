@@ -4,9 +4,9 @@ import { Thermometer, Droplets, Clock, Wifi } from 'lucide-react';
 
 export default function SensorDisplay({ data, status }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-8 gap-8 h-[25vh]">
       {/* Temperature Card */}
-      <div className="bg-linear-to-br from-red-50 to-orange-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <div className="bg-linear-to-br from-red-50 to-orange-50 rounded-lg shadow-lg  hover:shadow-xl transition-shadow">
         <div className="flex items-center justify-between mb-4">
           <Thermometer className="text-red-500" size={36} />
           <div className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -25,7 +25,7 @@ export default function SensorDisplay({ data, status }) {
       </div>
       
       {/* Humidity Card */}
-      <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
         <div className="flex items-center justify-between mb-4">
           <Droplets className="text-blue-500" size={36} />
           <Wifi className={status === 'online' ? 'text-green-500' : 'text-gray-400'} size={20} />
@@ -40,7 +40,7 @@ export default function SensorDisplay({ data, status }) {
       </div>
       
       {/* Uptime Card */}
-      <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
         <div className="flex items-center justify-between mb-4">
           <Clock className="text-purple-500" size={36} />
         </div>
@@ -54,14 +54,14 @@ export default function SensorDisplay({ data, status }) {
       </div>
       
       {/* System Info Card */}
-      <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
         <h3 className="text-gray-600 text-sm font-semibold mb-4">SYSTEM INFO</h3>
         <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-5">
             <span className="text-gray-600">Signal:</span>
             <span className="font-bold">{data?.rssi ? `${data.rssi} dBm` : '--'}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span className="text-gray-600">Memory:</span>
             <span className="font-bold">{data?.free_heap ? `${(data.free_heap / 1024).toFixed(0)} KB` : '--'}</span>
           </div>

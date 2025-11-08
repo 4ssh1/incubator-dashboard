@@ -9,8 +9,8 @@ export default function ManualControls({ data, onCommand }) {
   };
   
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-4 border-blue-500 pb-3">
+    <div className="bg-white p-8 mt-8 h-[30vh]">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-4 pb-3 leading-20">
         Manual Controls
       </h2>
       

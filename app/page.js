@@ -71,27 +71,27 @@ export default function Dashboard() {
   };
   
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-500 via-purple-500 to-pink-500 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 w-full flex flex-col items-center py-10 px-5 ">
+      <div className="w-[95%]">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-            <div className='px-5'>
-              <h1 className="text-4xl font-bold text-gray-800 mb-5">
-                🥚 ESP32 Egg Incubator Dashboard
+        <div className="bg-white h-52">
+          <div className="flex flex-col justify-between items-center gap-5">
+            <div className='px-5 '>
+              <h1 className="text-4xl font-bold text-gray-800 leading-20">
+                 ESP32 Egg Incubator Dashboard
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mt-5">
                 Real-time monitoring and control system with Firebase logging
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-[20rem] justify-between">
               <button
                 onClick={handleManualSave}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors shadow-md"
+                className="bg-blue-500 text-white inline-block rounded-lg w-30 font-bold hover:bg-blue-600 transition-colors shadow-md"
               >
                 💾 Save Now
               </button>
-              <div className={`px-6 py-3 rounded-full font-bold text-lg shadow-lg ${
+              <div className={`px-6 inline-block py-3 rounded-full w-30 font-bold text-lg shadow-lg ${
                 status === 'online' 
                   ? 'bg-green-500 text-white animate-pulse' 
                   : 'bg-red-500 text-white'
@@ -101,22 +101,25 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        
-        {/* Sensor Display */}
-        <SensorDisplay data={sensorData} status={status} />
-        
-        {/* Manual Controls */}
-        <ManualControls data={sensorData} onCommand={handleCommand} />
-        
-        {/* Servo & Stepper Controls */}
-        <ServoControls data={sensorData} onCommand={handleCommand} />
-        
-        {/* Temperature Chart */}
-        <TemperatureChart currentData={sensorData} />
-        
-        {/* Data Table */}
-        <DataTable />
-        
+          <SensorDisplay data={sensorData} status={status} />
+
+          {/* Manual Controls */}
+            <div className='mt-5'>
+              <ManualControls data={sensorData} onCommand={handleCommand} />
+            </div>
+        <div className='flex w-full'>          
+          {/* Servo & Stepper Controls */}
+            <ServoControls data={sensorData} onCommand={handleCommand} /> 
+        </div>
+
+        <div className='flex w-full'>
+            {/* Temperature Chart */}
+              <TemperatureChart currentData={sensorData} />
+        </div>
+          
+          {/* Data Table */}
+            <DataTable />
+         
         {/* Footer */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mt-8 text-center">
           <p className="text-gray-600">
