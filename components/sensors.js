@@ -4,7 +4,7 @@ import { Thermometer, Droplets, Clock, Wifi } from 'lucide-react';
 
 export default function SensorDisplay({ data, status }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
       {/* Temperature Card */}
       <div className="bg-linear-to-br from-red-50 to-orange-50 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
         <div className="flex items-center justify-between mb-4">
