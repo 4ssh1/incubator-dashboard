@@ -570,13 +570,13 @@ void readAndPublishSensors() {
   doc["temperature"] = round(currentTemp * 10) / 10.0;  // 1 decimal place
   doc["humidity"] = round(currentHumidity * 10) / 10.0;
   
-  // Add device states
+  // Add device states (match dashboard field names)
   doc["heater"] = heaterState;
-  doc["internal_fan"] = internalFanState;
+  doc["fan"] = internalFanState;  // Dashboard expects "fan" not "internal_fan"
   doc["solar_fans"] = solarFansState;
   doc["solenoid"] = solenoidState;
-  doc["solar_inlet_angle"] = solarInletAngle;
-  doc["top_vent_angle"] = topVentAngle;
+  doc["servo1_angle"] = solarInletAngle;  // Dashboard expects "servo1_angle"
+  doc["servo2_angle"] = topVentAngle;     // Dashboard expects "servo2_angle"
   
   // Add system info
   doc["uptime"] = millis() / 1000;
