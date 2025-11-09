@@ -75,13 +75,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-linear-to-br from-slate-500 via-slate-700 to-slate-500">
       {/* Header */}
       <header className="border-b border-slate-800/50 bg-slate-900/30 backdrop-blur-xl sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/20">
+              <div className="p-3 rounded-xl bg-linear-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/20">
                 <Egg className="h-6 w-6 text-white" />
               </div>
               <div>
