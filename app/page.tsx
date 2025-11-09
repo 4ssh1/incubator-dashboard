@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { initializeMQTT, publishCommand, onMessage } from '@/lib/mqtt';
 import { db } from '@/firebase.config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { SensorData, StatusMessage, ResponseMessage } from '@/types';
 
 import SensorDisplay from '@/components/sensors';
 import ManualControls from '@/components/manualCtrl';
@@ -12,40 +13,40 @@ import TemperatureChart from '@/components/chart';
 import DataTable from '@/components/dataTable';
 
 export default function Dashboard() {
-  const [sensorData, setSensorData] = useState(null);
-  const [status, setStatus] = useState('offline');
-  const [lastSaved, setLastSaved] = useState(null);
-  
+  const [sensorData, setSensorData] = useState<SensorData | null>(null);
+  const [status, setStatus] = useState<'online' | 'offline'>('offline');
+  const [lastSaved, setLastSaved] = useState<number | null>(null);
+
   // Initialize MQTT connection
   useEffect(() => {
-    const client = initializeMQTT();
-    
+    initializeMQTT();
+
     // Subscribe to MQTT messages
-    const unsubscribe = onMessage((topic, data) => {
+    const unsubscribe = onMessage((topic: string, data: SensorData | StatusMessage | ResponseMessage) => {
       if (topic === 'incubator/esp32/status') {
-        setStatus(data.status);
+        setStatus((data as StatusMessage).status);
       } else if (topic === 'incubator/esp32/sensors') {
-        setSensorData(data);
-        
+        setSensorData(data as SensorData);
+
         // Auto-save to Firebase every 30 seconds
         const now = Date.now();
         if (!lastSaved || (now - lastSaved) > 30000) {
-          saveToFirebase(data);
+          saveToFirebase(data as SensorData);
           setLastSaved(now);
         }
       } else if (topic === 'incubator/esp32/response') {
-        console.log('ESP32 Response:', data.message);
+        console.log('ESP32 Response:', (data as ResponseMessage).message);
         // You can show notifications here if needed
       }
     });
-    
+
     return () => {
       if (unsubscribe) unsubscribe();
     };
   }, [lastSaved]);
-  
+
   // Save sensor reading to Firebase
-  const saveToFirebase = async (data) => {
+  const saveToFirebase = async (data: SensorData): Promise<void> => {
     try {
       await addDoc(collection(db, 'sensor_readings'), {
         ...data,
@@ -56,20 +57,20 @@ export default function Dashboard() {
       console.error('Error saving to Firebase:', error);
     }
   };
-  
+
   // Send command to ESP32
-  const handleCommand = useCallback((command) => {
+  const handleCommand = useCallback((command: Record<string, boolean | number>) => {
     publishCommand(command);
   }, []);
-  
+
   // Manual save button
-  const handleManualSave = () => {
+  const handleManualSave = (): void => {
     if (sensorData) {
       saveToFirebase(sensorData);
       alert('Data saved to Firebase!');
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       {/* Header */}

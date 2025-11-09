@@ -1,14 +1,30 @@
 'use client';
 
-import { Power, Fan, Wind, Droplets } from 'lucide-react';
+import { Power, Fan, Wind, Droplets, LucideIcon } from 'lucide-react';
+import { SensorData } from '@/types';
 
-export default function ManualControls({ data, onCommand }) {
-  const handleToggle = (device) => {
-    const command = { [device]: !data?.[device] };
+interface ManualControlsProps {
+  data: SensorData | null;
+  onCommand: (command: Record<string, boolean>) => void;
+}
+
+interface Control {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  activeColor: string;
+  onLabel: string;
+  offLabel: string;
+}
+
+export default function ManualControls({ data, onCommand }: ManualControlsProps) {
+  const handleToggle = (device: string): void => {
+    const currentState = data?.[device as keyof SensorData] as boolean | undefined;
+    const command = { [device]: !currentState };
     onCommand(command);
   };
 
-  const controls = [
+  const controls: Control[] = [
     { id: 'heater', label: 'Heater', icon: Power, activeColor: 'text-orange-400', onLabel: 'ON', offLabel: 'OFF' },
     { id: 'internal_fan', label: 'Int. Fan', icon: Fan, activeColor: 'text-blue-400', onLabel: 'ON', offLabel: 'OFF' },
     { id: 'solar_fans', label: 'Solar Fans', icon: Wind, activeColor: 'text-yellow-400', onLabel: 'ON', offLabel: 'OFF' },
@@ -21,7 +37,7 @@ export default function ManualControls({ data, onCommand }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {controls.map((ctrl) => {
           const Icon = ctrl.icon;
-          const isActive = data?.[ctrl.id];
+          const isActive = data?.[ctrl.id as keyof SensorData] as boolean | undefined;
           return (
             <button
               key={ctrl.id}

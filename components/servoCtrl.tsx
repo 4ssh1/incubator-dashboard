@@ -1,24 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { RotateCw, Gauge } from 'lucide-react';
+import { SensorData } from '@/types';
 
-export default function ServoControls({ data, onCommand }) {
-  const [solarInlet, setSolarInlet] = useState(0);
-  const [topVent, setTopVent] = useState(0);
-  const [interval, setInterval] = useState(5000);
+interface ServoControlsProps {
+  data: SensorData | null;
+  onCommand: (command: Record<string, boolean | number>) => void;
+}
 
-  const handleServoChange = (servo, value) => {
+export default function ServoControls({ data, onCommand }: ServoControlsProps) {
+  const [solarInlet, setSolarInlet] = useState<number>(0);
+  const [topVent, setTopVent] = useState<number>(0);
+  const [interval, setInterval] = useState<number>(5000);
+
+  const handleServoChange = (servo: string, value: string): void => {
     const command = { [servo]: parseInt(value) };
     onCommand(command);
   };
 
-  const handleTurnEggs = () => {
+  const handleTurnEggs = (): void => {
     onCommand({ turn_eggs: true });
   };
 
-  const handleIntervalUpdate = () => {
-    const newInterval = parseInt(interval);
+  const handleIntervalUpdate = (): void => {
+    const newInterval = parseInt(interval.toString());
     if (newInterval >= 1000 && newInterval <= 60000) {
       onCommand({ interval: newInterval });
     } else {
@@ -42,9 +48,9 @@ export default function ServoControls({ data, onCommand }) {
             type="range"
             min="0"
             max="180"
-            value={data?.solar_inlet_angle || solarInlet}
-            onChange={(e) => {
-              setSolarInlet(e.target.value);
+            value={data?.servo1_angle || solarInlet}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setSolarInlet(parseInt(e.target.value));
               handleServoChange('solar_inlet', e.target.value);
             }}
             className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-400"
@@ -52,7 +58,7 @@ export default function ServoControls({ data, onCommand }) {
           <div className="flex justify-between items-center mt-4 text-sm">
             <span className="text-slate-400">0°</span>
             <span className="text-2xl font-bold text-orange-400">
-              {data?.solar_inlet_angle || solarInlet}°
+              {data?.servo1_angle || solarInlet}°
             </span>
             <span className="text-slate-400">180°</span>
           </div>
@@ -68,9 +74,9 @@ export default function ServoControls({ data, onCommand }) {
             type="range"
             min="0"
             max="180"
-            value={data?.top_vent_angle || topVent}
-            onChange={(e) => {
-              setTopVent(e.target.value);
+            value={data?.servo2_angle || topVent}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setTopVent(parseInt(e.target.value));
               handleServoChange('top_vent', e.target.value);
             }}
             className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-400"
@@ -78,7 +84,7 @@ export default function ServoControls({ data, onCommand }) {
           <div className="flex justify-between items-center mt-4 text-sm">
             <span className="text-slate-400">0°</span>
             <span className="text-2xl font-bold text-blue-400">
-              {data?.top_vent_angle || topVent}°
+              {data?.servo2_angle || topVent}°
             </span>
             <span className="text-slate-400">180°</span>
           </div>
@@ -104,7 +110,7 @@ export default function ServoControls({ data, onCommand }) {
             <input
               type="number"
               value={interval}
-              onChange={(e) => setInterval(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setInterval(parseInt(e.target.value))}
               className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 font-mono text-sm focus:border-blue-500 focus:outline-none"
               placeholder="5000"
               min="1000"

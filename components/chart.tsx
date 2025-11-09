@@ -1,28 +1,40 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, useMargin } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { SensorData } from '@/types';
 
-export default function TemperatureChart({ currentData }) {
-  const [history, setHistory] = useState([]);
-  
+interface ChartDataPoint {
+  time: string;
+  temperature: number;
+  humidity: number;
+  timestamp: number;
+}
+
+interface TemperatureChartProps {
+  currentData: SensorData | null;
+}
+
+export default function TemperatureChart({ currentData }: TemperatureChartProps) {
+  const [history, setHistory] = useState<ChartDataPoint[]>([]);
+
   useEffect(() => {
     if (currentData?.temperature && currentData?.humidity) {
       setHistory(prev => {
-        const newPoint = {
+        const newPoint: ChartDataPoint = {
           time: new Date().toLocaleTimeString(),
           temperature: parseFloat(currentData.temperature.toFixed(1)),
           humidity: parseFloat(currentData.humidity.toFixed(1)),
           timestamp: Date.now()
         };
-        
+
         const updated = [...prev, newPoint];
         // Keep last 50 points (or last hour of data)
         return updated.slice(-50);
       });
     }
   }, [currentData]);
-  
+
   return (
     <section className="mb-12">
       <h2 className="text-2xl font-bold mb-6 text-slate-100">History</h2>

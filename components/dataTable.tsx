@@ -2,13 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { db } from '@/firebase.config';
-import { collection, query, orderBy, limit, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, QueryDocumentSnapshot, DocumentData, Timestamp } from 'firebase/firestore';
 import { Download } from 'lucide-react';
 
+interface FirebaseReading {
+  id: string;
+  temperature?: number;
+  humidity?: number;
+  heater?: boolean;
+  internal_fan?: boolean;
+  solar_fans?: boolean;
+  uptime?: number;
+  savedAt: string;
+}
+
 export default function DataTable() {
-  const [readings, setReadings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  
+  const [readings, setReadings] = useState<FirebaseReading[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     // Real-time listener for new readings
     const q = query(
@@ -16,21 +27,26 @@ export default function DataTable() {
       orderBy('savedAt', 'desc'),
       limit(20)
     );
-    
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        savedAt: doc.data().savedAt?.toDate().toLocaleString() || 'N/A'
-      }));
+      const data = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+        const docData = doc.data();
+        const savedAtTimestamp = docData.savedAt as Timestamp | undefined;
+
+        return {
+          id: doc.id,
+          ...docData,
+          savedAt: savedAtTimestamp?.toDate().toLocaleString() || 'N/A'
+        } as FirebaseReading;
+      });
       setReadings(data);
       setLoading(false);
     });
-    
+
     return () => unsubscribe();
   }, []);
-  
-  const exportToCSV = () => {
+
+  const exportToCSV = (): void => {
     const headers = ['Date', 'Temperature (°C)', 'Humidity (%)', 'Heater', 'Fan', 'Uptime (s)'];
     const csvData = readings.map(r => [
       r.savedAt,
@@ -40,12 +56,12 @@ export default function DataTable() {
       r.internal_fan ? 'ON' : 'OFF',
       r.uptime
     ]);
-    
+
     const csvContent = [
       headers.join(','),
       ...csvData.map(row => row.join(','))
     ].join('\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -53,7 +69,7 @@ export default function DataTable() {
     a.download = `incubator_data_${Date.now()}.csv`;
     a.click();
   };
-  
+
   if (loading) {
     return (
       <section className="mb-12">
@@ -65,7 +81,7 @@ export default function DataTable() {
       </section>
     );
   }
-  
+
   return (
     <section className="mb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -129,7 +145,7 @@ export default function DataTable() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="px-4 py-12 text-center text-slate-400">
+                  <td colSpan={7} className="px-4 py-12 text-center text-slate-400">
                     No data available yet
                   </td>
                 </tr>
@@ -139,5 +155,5 @@ export default function DataTable() {
         </div>
       </div>
     </section>
-  )
+  );
 }

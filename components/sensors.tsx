@@ -1,8 +1,14 @@
 'use client';
 
 import { Thermometer, Droplets, Clock, Wifi } from 'lucide-react';
+import { SensorData, SystemStatus } from '@/types';
 
-export default function SensorDisplay({ data, status }) {
+interface SensorDisplayProps {
+  data: SensorData | null;
+  status: SystemStatus;
+}
+
+export default function SensorDisplay({ data, status }: SensorDisplayProps) {
   return (
     <section className="mb-12">
       <h2 className="text-2xl font-bold mb-6 text-slate-100">Live Sensors</h2>
