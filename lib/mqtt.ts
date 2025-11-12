@@ -7,10 +7,11 @@ let deviceStatus: 'online' | 'offline' = 'offline';
 let messageCallbacks: Array<(topic: string, data: SensorData | StatusMessage | ResponseMessage) => void> = [];
 
 export function initializeMQTT(): MqttClient | null {
-  if (typeof window === 'undefined') return null; // Only run in browser
+  if (typeof window === 'undefined') return null;
 
   if (!client) {
-    const brokerUrl = `ws://${process.env.NEXT_PUBLIC_MQTT_BROKER}:8083/mqtt`; //WebSocket port
+    // FIXED: Use correct HiveMQ public broker WebSocket URL
+    const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt'; // Secure WebSocket
 
     console.log('🔌 Connecting to MQTT broker:', brokerUrl);
 
@@ -18,50 +19,82 @@ export function initializeMQTT(): MqttClient | null {
       clientId: 'NextJS_Dashboard_' + Math.random().toString(16).substring(2, 8),
       clean: true,
       reconnectPeriod: 5000,
+      connectTimeout: 30000, // 30 seconds timeout
     });
 
     client.on('connect', () => {
-      console.log('✅ MQTT Connected');
+      console.log('✅ MQTT Connected to HiveMQ');
+      console.log('📡 Client ID:', client?.options.clientId);
 
       // Subscribe to topics
-      client?.subscribe('incubator/esp32/status', (err) => {
-        if (!err) console.log('📡 Subscribed to status');
-      });
+      const topics = [
+        'incubator/esp32/status',
+        'incubator/esp32/sensors',
+        'incubator/esp32/response'
+      ];
 
-      client?.subscribe('incubator/esp32/sensors', (err) => {
-        if (!err) console.log('📡 Subscribed to sensors');
-      });
-
-      client?.subscribe('incubator/esp32/response', (err) => {
-        if (!err) console.log('📡 Subscribed to response');
+      topics.forEach(topic => {
+        client?.subscribe(topic, { qos: 1 }, (err) => {
+          if (err) {
+            console.error(`❌ Failed to subscribe to ${topic}:`, err);
+          } else {
+            console.log(`✅ Subscribed to ${topic}`);
+          }
+        });
       });
     });
 
     client.on('message', (topic: string, message: Buffer) => {
       try {
-        const data = JSON.parse(message.toString()) as SensorData | StatusMessage | ResponseMessage;
-        console.log(`📩 ${topic}:`, data);
+        const messageStr = message.toString();
+        console.log(`📩 Raw message from ${topic}:`, messageStr);
+        
+        const data = JSON.parse(messageStr) as SensorData | StatusMessage | ResponseMessage;
+        console.log(`📊 Parsed data from ${topic}:`, data);
 
         if (topic === 'incubator/esp32/status') {
-          deviceStatus = (data as StatusMessage).status;
+          const statusMsg = data as StatusMessage;
+          deviceStatus = statusMsg.status;
+          console.log('🔔 Device status updated:', deviceStatus);
         } else if (topic === 'incubator/esp32/sensors') {
           latestSensorData = data as SensorData;
+          console.log('🌡️ Sensor data updated:', {
+            temp: latestSensorData.temperature,
+            humidity: latestSensorData.humidity,
+            timestamp: latestSensorData.timestamp
+          });
         }
 
         // Notify all callbacks
-        messageCallbacks.forEach(callback => callback(topic, data));
+        messageCallbacks.forEach(callback => {
+          try {
+            callback(topic, data);
+          } catch (callbackError) {
+            console.error('Error in message callback:', callbackError);
+          }
+        });
 
       } catch (error) {
-        console.error('Error parsing MQTT message:', error);
+        console.error('❌ Error parsing MQTT message:', error);
+        console.error('Raw message:', message.toString());
       }
     });
 
     client.on('error', (error: Error) => {
-      console.error('MQTT Error:', error);
+      console.error('❌ MQTT Error:', error);
     });
 
     client.on('reconnect', () => {
       console.log('🔄 MQTT Reconnecting...');
+    });
+
+    client.on('offline', () => {
+      console.log('⚠️ MQTT Client Offline');
+      deviceStatus = 'offline';
+    });
+
+    client.on('close', () => {
+      console.log('🔌 MQTT Connection Closed');
     });
   }
 
@@ -76,6 +109,12 @@ export function getSensorData(): {
   status: 'online' | 'offline';
   data: SensorData | null;
 } {
+  console.log('📊 Getting sensor data:', {
+    status: deviceStatus,
+    hasData: !!latestSensorData,
+    data: latestSensorData
+  });
+  
   return {
     status: deviceStatus,
     data: latestSensorData
@@ -87,15 +126,20 @@ export function publishCommand(command: Record<string, boolean | number | string
     const topic = 'incubator/esp32/control';
     const message = JSON.stringify(command);
 
+    console.log('🎮 Sending command to', topic, ':', command);
+
     client.publish(topic, message, { qos: 1 }, (error) => {
       if (error) {
-        console.error('Failed to send command:', error);
+        console.error('❌ Failed to send command:', error);
       } else {
-        console.log('🎮 Command sent:', command);
+        console.log('✅ Command sent successfully:', command);
       }
     });
   } else {
-    console.error('MQTT client not connected');
+    console.error('❌ MQTT client not connected. Status:', {
+      clientExists: !!client,
+      connected: client?.connected
+    });
   }
 }
 
@@ -103,9 +147,22 @@ export function onMessage(
   callback: (topic: string, data: SensorData | StatusMessage | ResponseMessage) => void
 ): () => void {
   messageCallbacks.push(callback);
+  console.log('📝 Message callback registered. Total callbacks:', messageCallbacks.length);
 
   // Return unsubscribe function
   return () => {
     messageCallbacks = messageCallbacks.filter(cb => cb !== callback);
+    console.log('📝 Message callback unregistered. Remaining:', messageCallbacks.length);
   };
+}
+
+export function disconnectMQTT(): void {
+  if (client) {
+    console.log('🔌 Disconnecting MQTT client...');
+    client.end();
+    client = null;
+    deviceStatus = 'offline';
+    latestSensorData = null;
+    messageCallbacks = [];
+  }
 }
